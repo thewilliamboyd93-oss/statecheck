@@ -1,0 +1,17 @@
+# requirements.txt
+#
+# Trimmed to exactly what the current primitive system needs:
+# orng_core/verifier_search.py (the correctness gate + search loop) and
+# orng_core/tool_executor.py (the Invariant Gate). Continuity, pitchdeck
+# packaging, and model-selection dependencies were removed along with
+# that code — see ORNG_PROTOCOL.md changelog for why.
+#
+# Every version pinned here was actually installed and run against this
+# code in the same session this file was generated. Nothing is guessed.
+# Python: 3.12.3 (tested); 3.10+ should work, not verified below that.
+
+numpy==2.4.4
+torch==2.13.0+cpu
+--extra-index-url https://download.pytorch.org/whl/cpu
+
+pytest==9.1.1
