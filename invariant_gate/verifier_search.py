@@ -235,7 +235,7 @@ def _resource_limited_preexec(memory_mb: int = 512, cpu_seconds: int = 20):
     def _set_limits():
         resource.setrlimit(resource.RLIMIT_AS, (memory_mb * 1024 * 1024, memory_mb * 1024 * 1024))
         resource.setrlimit(resource.RLIMIT_CPU, (cpu_seconds, cpu_seconds))
-        resource.setrlimit(resource.RLIMIT_NPROC, (32, 32))  # blocks fork-bombs
+        resource.setrlimit(resource.RLIMIT_NPROC, (64, 64))  # blocks fork-bombs
         resource.setrlimit(resource.RLIMIT_FSIZE, (10 * 1024 * 1024, 10 * 1024 * 1024))
         _os.setsid()  # own process group -> killable as a unit
 
@@ -280,7 +280,10 @@ def execute_candidate(target: Target, candidate_source: str, device: str = "cpu"
             )
         )
 
-        env = {"PATH": "/usr/bin:/bin", "PYTHONPATH": ""}
+        env = {
+    "PATH": "/usr/bin:/bin", "PYTHONPATH": "",
+    "OPENBLAS_NUM_THREADS": "1", "OMP_NUM_THREADS": "1", "MKL_NUM_THREADS": "1",
+        }
         if allow_network:
             logger.warning("executing candidate with allow_network=True — "
                             "only use this for explicitly trusted proposers")
