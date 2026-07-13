@@ -39,6 +39,7 @@ import json
 import logging
 import re
 import subprocess
+Import sys
 import tempfile
 import textwrap
 from dataclasses import dataclass, field
@@ -293,7 +294,7 @@ def execute_candidate(target: Target, candidate_source: str, device: str = "cpu"
 
         try:
             proc = subprocess.run(
-                ["python3", "-I", str(driver)],  # -I: isolated mode, ignores user site/env
+                [sys.executable, "-I", str(driver)],  # sys.executable, not "python3" - guarantees same interpreter
                 capture_output=True, text=True, timeout=timeout_s,
                 cwd=str(tmp_path), env=env,
                 preexec_fn=_resource_limited_preexec(memory_mb, cpu_seconds),
