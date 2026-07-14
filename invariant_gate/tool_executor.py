@@ -271,6 +271,10 @@ def execute_contracted(contract: ToolContract, fn: Callable[..., Any], *args, **
         elif contract.is_mutating and contract.is_recovery_tool:
             GLOBAL_TAINT.check_or_raise_for_recovery(contract.name, contract.recovers_reasons)
 
+        if contract.is_mutating and contract.pre_condition is None:
+            raise ContractViolation(stage="pre", tool_name=contract.name,
+                                     predicate_name="none", recovery_state="no_effect",
+                                     note="mutating tool has no pre_condition (deny-by-default)")
         if contract.pre_condition is not None:
             try:
                 ok = contract.pre_condition()

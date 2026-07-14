@@ -366,6 +366,22 @@ a reader could find without inferring it from test code:
 ---
 
 ## Changelog
+- **v0.5.0** — Closed a real gap found via a self-authored comparative
+  claim (20 hand-labeled scenarios inspired by arXiv:2606.08919's
+  selective-classification framing): a mutating tool with
+  `pre_condition=None` previously executed unconditionally, since the
+  gate only checked the predicate `if contract.pre_condition is not
+  None`. Now, any mutating tool with no `pre_condition` raises a
+  `ContractViolation` before execution (deny-by-default). Non-mutating
+  tools (e.g. `search`, which legitimately uses `pre_condition=None`
+  with `is_mutating=False`) are unaffected -- confirmed explicitly,
+  since a blanket deny-by-default would have broken that intentional
+  case. Verified against the full existing suite (52/52 passing, zero
+  regressions) plus two new targeted checks (non-mutating tool
+  unaffected; mutating tool with no predicate now correctly denied).
+  Distinct from, and complementary to, the earlier comparative-claim
+  fix which hardened *weak* predicates -- this closes *missing*
+  predicates at the framework level.
 
 - **v0.4.1** — Two findings from a final stress-testing pass: (1)
   `_GATE_LOCK` deadlocks on reentrant calls (a rollback/pre/post-condition
