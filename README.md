@@ -5,11 +5,6 @@ deterministic pre-condition holds — and rolls back or taints the world if
 a post-condition fails afterward. No prompts. No self-reports. Code
 executing and checking, nothing else.
 
-This started as something much bigger (an autonomous AI-research agent —
-kernels, architectures, distributed training, investor pitch decks, the
-works, under an earlier project name) and was deliberately cut down. What
-remains is the one piece that survived scrutiny.
-
 Read `PROTOCOL.md` for the actual spec — versioned, with a table of
 contents. This file is the orientation.
 
