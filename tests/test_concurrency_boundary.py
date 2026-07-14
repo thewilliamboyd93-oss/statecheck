@@ -21,7 +21,7 @@ tests/test_concurrency_boundary.py (pytest)
 
 import threading
 
-from invariant_gate.tool_executor import GLOBAL_TAINT, ContractViolation
+from umpire.tool_executor import GLOBAL_TAINT, ContractViolation
 
 
 def _fresh_violation(reason: str) -> ContractViolation:

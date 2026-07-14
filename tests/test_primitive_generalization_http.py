@@ -4,7 +4,7 @@ tests/test_primitive_generalization_http.py (pytest)
     tool shape with a materially different failure mode than the four
     tools tool_executor.py already has (file write, sqlite, shell, search)
     and see whether ToolContract holds WITHOUT any change to
-    invariant_gate/tool_executor.py itself.
+    umpire/tool_executor.py itself.
 
     HTTP is the right first case because its failure modes are genuinely
     different from what's already covered: connection reset mid-request
@@ -30,7 +30,7 @@ import urllib.request
 
 import pytest
 
-from invariant_gate.tool_executor import (
+from umpire.tool_executor import (
     ToolContract, execute_contracted, ExecutionFailure, ContractViolation, GLOBAL_TAINT,
 )
 
@@ -200,7 +200,7 @@ def test_taint_from_http_blocks_subsequent_mutating_calls(local_server, tmp_path
     an HTTP-caused taint must block a completely unrelated mutating tool
     (file_write_tool), proving the guard is genuinely shared state, not
     something http_post_tool would need its own copy of."""
-    from invariant_gate.tool_executor import file_write_tool
+    from umpire.tool_executor import file_write_tool
 
     _MODE["value"] = "reset_mid_request"
     with pytest.raises(ExecutionFailure):

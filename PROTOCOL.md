@@ -1,4 +1,4 @@
-# Invariant Gate — Protocol Specification — v0.4.1
+# Umpire — Protocol Specification — v0.4.1
 
 **Status:** Draft. Everything in this document is versioned and append-only
 by convention: fields are never silently removed or repurposed across a
@@ -7,7 +7,7 @@ keeps working against every release within it.
 
 **Contents:** §1 core objects (`Candidate`, `ScoredCandidate`) · §2
 execution contract (sandboxing, correctness-gating) · §3 tool-call wire
-format · §4 the Invariant Gate itself (pre/post-conditions, rollback,
+format · §4 the Umpire itself (pre/post-conditions, rollback,
 taint-tracking, scoped recovery, and its concurrency guarantee) · §5 the
 non-goals · §6 comparative grounding against real incidents/literature.
 
@@ -15,7 +15,7 @@ non-goals · §6 comparative grounding against real incidents/literature.
 not incidental: the impact-scoring contract (former §3), continuity node
 schema (former §5), and everything built around them (insight storage,
 pitchdeck packaging, model-selection benchmarking) have been removed from
-scope. Direction narrowed to one question — does the Invariant Gate
+scope. Direction narrowed to one question — does the Umpire
 primitive (§4) generalize as a reusable interface, the way MCP's transport
 primitive did — and this document now describes only the system built to
 answer that question. See Changelog for the full list of what left scope
@@ -110,7 +110,7 @@ that halts the caller.
 
 ---
 
-## 4. The Invariant Gate primitive (tool_executor)
+## 4. The Umpire primitive (tool_executor)
 
 **This is the primitive the current direction is centered on evaluating.**
 It generalizes §2's correctness gate from search candidates to any tool
@@ -301,7 +301,7 @@ Subjective, Fatiguing Human" (arXiv:2606.08919) frames agent-guard
 evaluation as selective classification under asymmetric cost — reporting
 an operating-point curve, a Neyman-Pearson point, and AURC rather than a
 pass/fail count — and includes an open-source measurement apparatus. That
-is the standard a real comparative-utility claim for the Invariant Gate
+is the standard a real comparative-utility claim for the Umpire
 should eventually be measured against, not this illustration.
 
 ---
@@ -344,7 +344,7 @@ a reader could find without inferring it from test code:
   `ExecutionFailure` (the tool itself raised — `fn()` errored,
   irrespective of any predicate).
 - **Observability is Python's standard `logging` module**, namespaced
-  per file (e.g. `invariant_gate.tool_executor`). There is no separate
+  per file (e.g. `umpire.tool_executor`). There is no separate
   structured-output file, no built-in trace persistence beyond what a log
   handler is configured to capture, and no dashboard. `ContractViolation.to_dict()`
   exists for structured inspection but is not automatically written
@@ -366,6 +366,24 @@ a reader could find without inferring it from test code:
 ---
 
 ## Changelog
+- **v0.5.1** — Renamed the project from `invariant-gate` to `umpire`
+  (package `invariant_gate/` -> `umpire/`). Reason: a name-collision check
+  against a curated AI-security tools directory (done as part of GTM
+  research before a submission) found the prior name overlapped closely
+  with Invariant Labs' existing, more established product line
+  (Invariant Gateway, mcp-scan, Invariant Guardrails) in the exact same
+  space. Resolved by renaming rather than by disclaimer, since the
+  overlap was close enough (shared "Invariant" root, same technical
+  niche) that a disclaimer would not have meaningfully reduced confusion.
+  New name chosen and verified against the same directory plus targeted
+  searches for direct collisions before adopting -- "umpire" ties to the
+  gate's actual post_condition behavior (an independent party that makes
+  the call based on what's observably true, not on any party's
+  self-report) rather than to the pre_condition/access-control metaphor
+  most named competitors in this space already use. No functional code
+  changes; full existing suite re-verified passing (52/52) after the
+  rename, both at the package-directory level and after all doc/comment
+  references were updated.
 - **v0.5.0** — Closed a real gap found via a self-authored comparative
   claim (20 hand-labeled scenarios inspired by arXiv:2606.08919's
   selective-classification framing): a mutating tool with
@@ -409,7 +427,7 @@ a reader could find without inferring it from test code:
   that happened to overlap in time) — a full lock was simpler and matched
   what §7 already claimed.
 - **v0.3.2** — Dropped the "orng" project framing entirely (package
-  renamed `orng_core/` -> `invariant_gate/`, spec file renamed
+  renamed `orng_core/` -> `umpire/`, spec file renamed
   `ORNG_PROTOCOL.md` -> `PROTOCOL.md`). Added §8 (interface/observability/
   measured overhead) and made the per-caller-vs-per-system concurrency
   guarantee explicit in §4 and §7, correcting the record that it was a
@@ -440,11 +458,11 @@ a reader could find without inferring it from test code:
   §3), continuity node schema (former §5), and all dependent code
   (`continuity/`, `orng_core/impact.py`, `pitchdeck_composer/`,
   `orng_core/model_select.py`'s benchmarking logic, `cloud/gpu_detect.py`).
-  Direction narrowed to: does the Invariant Gate primitive (§4)
+  Direction narrowed to: does the Umpire primitive (§4)
   generalize. Extracted `parse_with_fallback` into its own module
   (`orng_core/tool_call_parser.py`) since it's coupled to §3 (wire format)
   independent of model selection.
 - **v0.1.0** — initial draft. Core object schemas, execution contract,
   impact scoring contract, tool-call wire format, continuity schema
-  versioning requirement, and the Invariant Gate primitive for general
+  versioning requirement, and the Umpire primitive for general
   tool execution (prevention, containment, scoped recovery).

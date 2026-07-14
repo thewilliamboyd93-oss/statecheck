@@ -1,5 +1,5 @@
 """
-invariant_gate/tool_executor.py
+umpire/tool_executor.py
     A model's "hands" — filesystem, sqlite, shell, python — do not get to act
     on the model's say-so alone. Every mutating call passes through the
     same shape of gate that verifier_search.py already proved works for
@@ -42,7 +42,7 @@ from dataclasses import dataclass
 from pathlib import Path
 from typing import Any, Callable, Optional
 
-logger = logging.getLogger("invariant_gate.tool_executor")
+logger = logging.getLogger("umpire.tool_executor")
 
 
 # --------------------------------------------------------------------------- #
@@ -470,13 +470,13 @@ def shell_command_tool(cmd: list, timeout_s: int = 15,
 def search_tool(target, propose_fn, config=None) -> Any:
     """
     Direct mapping per the accepted plan: this wraps
-    invariant_gate.verifier_search.run_search unchanged, and its post_condition
+    umpire.verifier_search.run_search unchanged, and its post_condition
     IS ScoredCandidate.all_correct — the exact logic already proven in
     verifier_search.py, not a reimplementation of it. A search whose best
     result is incorrect is itself a contract failure at the tool_executor
     layer, not just an internal fitness=0.0.
     """
-    from invariant_gate.verifier_search import run_search, SearchConfig
+    from umpire.verifier_search import run_search, SearchConfig
 
     def do_search():
         return run_search(target, propose_fn, config or SearchConfig())

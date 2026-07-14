@@ -1,12 +1,12 @@
-# Invariant Gate — External Wrap Test
+# Umpire — External Wrap Test
 
 ## What this is
 
-`invariant-gate` is a small primitive: a deterministic gate that decides
+`umpire` is a small primitive: a deterministic gate that decides
 whether a tool call is allowed to run (`pre_condition`), and whether its
 result can be trusted afterward (`post_condition`) — with real rollback
 where possible, and taint-tracking where it isn't. Full spec: `PROTOCOL.md`.
-Real code, real tests: `invariant_gate/tool_executor.py`.
+Real code, real tests: `umpire/tool_executor.py`.
 
 Every test proving this so far was written by the person who designed it.
 That's the gap this exercise exists to close.

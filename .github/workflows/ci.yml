@@ -1,7 +1,7 @@
-name: Invariant Gate CI
+name: Umpire CI
 
 # Runs the pytest suite for the current primitive system: verifier_search.py
-# (the correctness gate) and tool_executor.py (the Invariant Gate). Scope
+# (the correctness gate) and tool_executor.py (the Umpire). Scope
 # was narrowed deliberately — see PROTOCOL.md changelog.
 
 on:

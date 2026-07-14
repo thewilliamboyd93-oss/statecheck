@@ -8,7 +8,7 @@ tests/test_verifier_search.py (pytest)
 
 import textwrap
 
-from invariant_gate.verifier_search import (
+from umpire.verifier_search import (
     DEFAULT_TARGET, Candidate, SearchRun, score_candidate,
 )
 

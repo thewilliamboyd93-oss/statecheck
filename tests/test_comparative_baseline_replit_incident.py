@@ -32,8 +32,8 @@ tests/test_comparative_baseline_replit_incident.py (pytest)
 
 import pytest
 
-from invariant_gate import tool_executor as te
-from invariant_gate.tool_executor import ContractViolation, GLOBAL_TAINT
+from umpire import tool_executor as te
+from umpire.tool_executor import ContractViolation, GLOBAL_TAINT
 
 
 @pytest.fixture(autouse=True)

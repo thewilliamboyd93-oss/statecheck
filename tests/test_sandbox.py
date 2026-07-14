@@ -6,7 +6,7 @@ tests/test_sandbox.py (pytest)
 
 import pytest
 
-from invariant_gate.verifier_search import static_sandbox_check, SandboxViolation
+from umpire.verifier_search import static_sandbox_check, SandboxViolation
 
 
 ADVERSARIAL_CASES = [
@@ -35,7 +35,7 @@ def test_legitimate_candidate_passes_static_check():
 
 
 def test_from_import_form_is_checked_against_the_same_allowlist():
-    from invariant_gate.verifier_search import SandboxViolation
+    from umpire.verifier_search import SandboxViolation
 
     static_sandbox_check("from math import sqrt\ndef candidate(x):\n    return sqrt(x)\n")  # allowed, no raise
 
@@ -44,7 +44,7 @@ def test_from_import_form_is_checked_against_the_same_allowlist():
 
 
 def test_dotted_submodule_import_resolves_to_its_top_level_package():
-    from invariant_gate.verifier_search import SandboxViolation
+    from umpire.verifier_search import SandboxViolation
 
     # os.path is still "os" at the top level — the allowlist check must
     # resolve the dotted form, not be fooled by checking the full string.

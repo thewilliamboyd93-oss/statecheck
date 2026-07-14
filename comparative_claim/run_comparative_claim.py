@@ -1,9 +1,9 @@
 """
 Comparative claim runner — executes the labeled scenario set through the
-REAL invariant_gate ToolContract/execute_contracted mechanism and reports
+REAL umpire ToolContract/execute_contracted mechanism and reports
 how gate decisions line up against ground-truth labels.
 
-SCOPING NOTE: invariant-gate's gate is a deterministic pre_condition/
+SCOPING NOTE: umpire's gate is a deterministic pre_condition/
 post_condition check, not a continuous confidence score. arXiv:2606.08919
 evaluates guards using selective-classification framing (risk vs.
 coverage across a sweepable threshold), which assumes a scalar confidence
@@ -21,7 +21,7 @@ import importlib
 
 sys.path.insert(0, os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 
-from invariant_gate.tool_executor import execute_contracted, ToolContract
+from umpire.tool_executor import execute_contracted, ToolContract
 
 SCENARIO_MODULE = sys.argv[1] if len(sys.argv) > 1 else "comparative_scenarios"
 _scenarios_mod = importlib.import_module(SCENARIO_MODULE)

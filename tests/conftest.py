@@ -1,6 +1,6 @@
 """
 tests/conftest.py
-    Shared setup: makes the project root importable so `from invariant_gate...`
+    Shared setup: makes the project root importable so `from umpire...`
     works regardless of where pytest is invoked from.
 """
 

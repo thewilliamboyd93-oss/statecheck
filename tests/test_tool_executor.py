@@ -14,7 +14,7 @@ import sqlite3
 
 import pytest
 
-from invariant_gate.tool_executor import (
+from umpire.tool_executor import (
     ContractViolation, ExecutionFailure, GLOBAL_TAINT,
     file_write_tool, sqlite_exec_tool, shell_command_tool,
 )
@@ -47,7 +47,7 @@ def test_file_write_rollback_restores_exact_prior_content(tmp_path):
     # Force a post-condition failure by writing then checking against a
     # DIFFERENT expected string than what was actually written — simulates
     # e.g. a concurrent modification or a write that silently truncated.
-    from invariant_gate import tool_executor as te
+    from umpire import tool_executor as te
 
     def broken_post(result):
         return False  # always fails, to force the rollback path
@@ -75,7 +75,7 @@ def test_file_write_rollback_deletes_file_that_did_not_exist_before(tmp_path):
     p = tmp_path / "new_file.txt"
     assert not p.exists()
 
-    from invariant_gate import tool_executor as te
+    from umpire import tool_executor as te
 
     contract = te.ToolContract(
         name="file_write_forced_fail_new",

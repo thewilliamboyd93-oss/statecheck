@@ -1,4 +1,4 @@
-# Invariant Gate
+# Umpire
 
 A hard gate that stops an agent from running a tool unless a
 deterministic pre-condition holds — and rolls back or taints the world if
@@ -16,7 +16,7 @@ contents. This file is the orientation.
 ## Quick example
 
 ```python
-from invariant_gate.tool_executor import ToolContract, execute_contracted
+from umpire.tool_executor import ToolContract, execute_contracted
 
 # Predicates are plain Python callables, written by whoever authors the
 # tool — never strings passed in at call time, never something a model
@@ -52,11 +52,11 @@ result = execute_contracted(contract, do_push)
 ## What's here
 
 ```
-invariant_gate/
+umpire/
   verifier_search.py    the correctness gate + search loop
                          (propose -> execute -> score -> mutate,
                           sandboxed, fitness=0 if incorrect, full stop)
-  tool_executor.py       the Invariant Gate itself
+  tool_executor.py       the Umpire itself
                          (pre_condition -> execute -> post_condition,
                           real rollback where possible, taint-tracking
                           with scoped recovery where it isn't)
@@ -69,7 +69,7 @@ tests/
   test_sandbox.py                            adversarial code rejection
                                               (real allowlist enforcement)
   test_tool_executor.py                      the Gate's core contract
-  test_stress_invariant_gate.py              a real bug this found and the fix
+  test_stress_umpire.py              a real bug this found and the fix
   test_tool_call_parser.py                   wire-format parsing
   test_concurrency_boundary.py               proves TaintTracker's raw
                                               primitives are unlocked —
@@ -119,7 +119,7 @@ it ran but failed its post-condition — carries `.stage`, `.tool_name`,
 predicate).
 
 Observability is Python's standard `logging` module, namespaced per file
-(`invariant_gate.tool_executor`, etc.). There's no separate structured
+(`umpire.tool_executor`, etc.). There's no separate structured
 log file or dashboard — a caller that wants a persisted trace calls
 `.to_dict()` on a caught `ContractViolation` and writes it out itself.
 
@@ -155,7 +155,7 @@ gate, benchmarked against KernelBench — was cut from scope; see
   examples (`test_sandbox.py`).
 - The Gate's rollback is real where claimed and its taint-blocking is
   actually enforced, not just logged (`test_tool_executor.py`,
-  `test_stress_invariant_gate.py`).
+  `test_stress_umpire.py`).
 - The Gate generalizes to tool shapes it wasn't designed around — HTTP
   (connection resets, rate limits, timeouts) and git (real merge
   conflicts, real lock files) — with zero changes to the primitive itself
