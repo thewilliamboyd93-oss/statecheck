@@ -1,5 +1,5 @@
 """
-umpire/verifier_search.py
+statecheck/verifier_search.py
     This is the module that decides whether a proposed change is a real
     improvement or a storyteller's confident guess. Everything upstream
     (a proposer model's prompting) can produce a plausible-sounding
@@ -46,7 +46,7 @@ from dataclasses import dataclass, field
 from pathlib import Path
 from typing import Callable, Optional
 
-logger = logging.getLogger("umpire.verifier_search")
+logger = logging.getLogger("statecheck.verifier_search")
 
 
 # --------------------------------------------------------------------------- #
@@ -146,7 +146,7 @@ class Candidate:
 ProposeFn = Callable[[Target, Optional[Candidate]], str]
 """A proposer takes the target + an optional parent candidate to mutate,
 and returns candidate source code as a string. In production this is
-umpire.brain calling the locally selected tool-capable model with a
+statecheck.brain calling the locally selected tool-capable model with a
 tightly constrained prompt ("here is the reference, here is the current
 best candidate and its measured latency, propose ONE targeted mutation").
 It is intentionally injected as a function here so this module has zero
@@ -261,7 +261,7 @@ def execute_candidate(target: Target, candidate_source: str, device: str = "cpu"
     """
     static_sandbox_check(candidate_source)
 
-    with tempfile.TemporaryDirectory(prefix="umpire_verify_") as tmp:
+    with tempfile.TemporaryDirectory(prefix="statecheck_verify_") as tmp:
         tmp_path = Path(tmp)
         cand_file = tmp_path / "candidate_mod.py"
         cand_file.write_text(candidate_source)
@@ -457,7 +457,7 @@ if __name__ == "__main__":
     def trivial_propose(target: Target, parent: Optional[Candidate]) -> str:
         # Placeholder proposer for smoke-testing the loop without a model:
         # returns the parent unchanged so the harness/execution path can be
-        # validated end-to-end. umpire/brain.py supplies the real,
+        # validated end-to-end. statecheck/brain.py supplies the real,
         # model-driven proposer.
         return parent.source if parent else default_seed_candidate(target)
 

@@ -8,7 +8,7 @@ tests/test_verifier_search.py (pytest)
 
 import textwrap
 
-from umpire.verifier_search import (
+from statecheck.verifier_search import (
     DEFAULT_TARGET, Candidate, SearchRun, score_candidate,
 )
 

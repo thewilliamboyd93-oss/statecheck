@@ -17,7 +17,7 @@ tests/test_gate_lock_serialization.py (pytest)
 
 import threading
 
-from umpire import tool_executor as te
+from statecheck import tool_executor as te
 
 
 def _reset():

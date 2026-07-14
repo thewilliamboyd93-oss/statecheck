@@ -1,5 +1,5 @@
 """
-umpire/tool_call_parser.py
+statecheck/tool_call_parser.py
     The wire-format contract between any model and this project's tools
     (PROTOCOL.md §4). Extracted as its own module because it is the
     one piece of the original model-selection work actually coupled to
@@ -18,7 +18,7 @@ import logging
 import re
 from typing import Optional
 
-logger = logging.getLogger("umpire.tool_call_parser")
+logger = logging.getLogger("statecheck.tool_call_parser")
 
 
 def parse_with_fallback(raw_text: str) -> Optional[dict]:

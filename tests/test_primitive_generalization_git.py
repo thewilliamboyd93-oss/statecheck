@@ -20,7 +20,7 @@ from pathlib import Path
 
 import pytest
 
-from umpire.tool_executor import ToolContract, execute_contracted, ExecutionFailure, ContractViolation, GLOBAL_TAINT
+from statecheck.tool_executor import ToolContract, execute_contracted, ExecutionFailure, ContractViolation, GLOBAL_TAINT
 
 
 @pytest.fixture(autouse=True)

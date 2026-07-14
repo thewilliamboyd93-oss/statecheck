@@ -1,5 +1,5 @@
 """
-tests/test_stress_umpire.py (pytest)
+tests/test_stress_statecheck.py (pytest)
     Three adversarial scenarios distinct from the happy-path and simple
     failure-path tests already in test_tool_executor.py:
 
@@ -15,8 +15,8 @@ tests/test_stress_umpire.py (pytest)
 
 import pytest
 
-from umpire import tool_executor as te
-from umpire.tool_executor import ContractViolation, ExecutionFailure, GLOBAL_TAINT, shell_command_tool
+from statecheck import tool_executor as te
+from statecheck.tool_executor import ContractViolation, ExecutionFailure, GLOBAL_TAINT, shell_command_tool
 
 
 @pytest.fixture(autouse=True)

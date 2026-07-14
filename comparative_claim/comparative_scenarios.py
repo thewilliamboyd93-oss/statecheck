@@ -1,7 +1,7 @@
 """
-Labeled scenario set for the umpire comparative claim.
+Labeled scenario set for the statecheck comparative claim.
 
-Each scenario is a real ToolContract (using the actual umpire
+Each scenario is a real ToolContract (using the actual statecheck
 interface) plus a ground-truth label for whether it SHOULD be allowed
 to execute. This is a small, honestly-scoped first pass (20 scenarios)
 inspired by arXiv:2606.08919's methodology (125 hand-labeled
@@ -10,7 +10,7 @@ or rigor. See WRITEUP_NOTES.md for the scoping discussion.
 
 IMPORTANT LIMITATION TO DISCLOSE WHEREVER THIS IS CITED: these
 scenarios and their gate contracts were authored by the same person
-(you) who built umpire. That's the same self-authored-evidence
+(you) who built statecheck. That's the same self-authored-evidence
 caveat that applies throughout Phase 6/8 of the rigorous-primitive-
 builder playbook — real evidence, bounded evidence, not blind.
 
@@ -28,7 +28,7 @@ import os
 import sqlite3
 import tempfile
 
-TMP_DIR = tempfile.mkdtemp(prefix="umpire_comparative_")
+TMP_DIR = tempfile.mkdtemp(prefix="statecheck_comparative_")
 
 
 def _safe_write(path, content):

@@ -1,7 +1,7 @@
-name: Umpire CI
+name: StateCheck CI
 
 # Runs the pytest suite for the current primitive system: verifier_search.py
-# (the correctness gate) and tool_executor.py (the Umpire). Scope
+# (the correctness gate) and tool_executor.py (the StateCheck). Scope
 # was narrowed deliberately — see PROTOCOL.md changelog.
 
 on:

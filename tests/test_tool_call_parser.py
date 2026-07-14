@@ -4,7 +4,7 @@ tests/test_tool_call_parser.py (pytest)
     mangles JSON tool-call output, per PROTOCOL.md §4.
 """
 
-from umpire.tool_call_parser import parse_with_fallback
+from statecheck.tool_call_parser import parse_with_fallback
 
 
 def test_parser_handles_clean_json():

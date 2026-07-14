@@ -1,13 +1,13 @@
 """
 External-validation candidate: wrap a real Hugging Face Inference API
 call (text-classification, confirmed live on hf-inference) in a
-ToolContract, using the actual umpire interface.
+ToolContract, using the actual statecheck interface.
 """
 
 import os
 import requests
 
-from umpire.tool_executor import execute_contracted, ToolContract, GLOBAL_TAINT
+from statecheck.tool_executor import execute_contracted, ToolContract, GLOBAL_TAINT
 
 HF_TOKEN = os.environ.get("HF_TOKEN")
 HF_MODEL_URL = "https://router.huggingface.co/hf-inference/models/distilbert/distilbert-base-uncased-finetuned-sst-2-english"

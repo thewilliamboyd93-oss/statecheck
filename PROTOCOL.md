@@ -1,4 +1,4 @@
-# Umpire — Protocol Specification — v0.4.1
+# StateCheck — Protocol Specification — v0.5.2
 
 **Status:** Draft. Everything in this document is versioned and append-only
 by convention: fields are never silently removed or repurposed across a
@@ -7,7 +7,7 @@ keeps working against every release within it.
 
 **Contents:** §1 core objects (`Candidate`, `ScoredCandidate`) · §2
 execution contract (sandboxing, correctness-gating) · §3 tool-call wire
-format · §4 the Umpire itself (pre/post-conditions, rollback,
+format · §4 the StateCheck itself (pre/post-conditions, rollback,
 taint-tracking, scoped recovery, and its concurrency guarantee) · §5 the
 non-goals · §6 comparative grounding against real incidents/literature.
 
@@ -15,7 +15,7 @@ non-goals · §6 comparative grounding against real incidents/literature.
 not incidental: the impact-scoring contract (former §3), continuity node
 schema (former §5), and everything built around them (insight storage,
 pitchdeck packaging, model-selection benchmarking) have been removed from
-scope. Direction narrowed to one question — does the Umpire
+scope. Direction narrowed to one question — does the StateCheck
 primitive (§4) generalize as a reusable interface, the way MCP's transport
 primitive did — and this document now describes only the system built to
 answer that question. See Changelog for the full list of what left scope
@@ -29,7 +29,7 @@ in the current scope refers to it.
 A primitive is trusted long-term for the same reason a protocol is:
 because its interface is stable and its behavior on a given input is
 predictable, *independent of which specific codebase implements it*. This
-document is that interface. `orng_core/` is **one implementation** of it —
+document is that interface. `statecheck/` is **one implementation** of it —
 not the spec itself. A different runtime (a different model, a different
 sandbox, even a different language) that satisfies this document is a
 conformant implementation.
@@ -102,7 +102,7 @@ MUST accept output in the canonical form:
 ```
 
 and MUST run it through a fallback parser (see
-`orng_core/tool_call_parser.py: parse_with_fallback`) attempting, in
+`statecheck/tool_call_parser.py: parse_with_fallback`) attempting, in
 order: (1) direct parse, (2) markdown-fence stripping, (3) greedy `{...}`
 extraction, (4) single- to double-quote repair. A `null` result from all
 four strategies MUST be treated as "no tool call," never as an exception
@@ -110,7 +110,7 @@ that halts the caller.
 
 ---
 
-## 4. The Umpire primitive (tool_executor)
+## 4. The StateCheck primitive (tool_executor)
 
 **This is the primitive the current direction is centered on evaluating.**
 It generalizes §2's correctness gate from search candidates to any tool
@@ -301,7 +301,7 @@ Subjective, Fatiguing Human" (arXiv:2606.08919) frames agent-guard
 evaluation as selective classification under asymmetric cost — reporting
 an operating-point curve, a Neyman-Pearson point, and AURC rather than a
 pass/fail count — and includes an open-source measurement apparatus. That
-is the standard a real comparative-utility claim for the Umpire
+is the standard a real comparative-utility claim for the StateCheck
 should eventually be measured against, not this illustration.
 
 ---
@@ -344,7 +344,7 @@ a reader could find without inferring it from test code:
   `ExecutionFailure` (the tool itself raised — `fn()` errored,
   irrespective of any predicate).
 - **Observability is Python's standard `logging` module**, namespaced
-  per file (e.g. `umpire.tool_executor`). There is no separate
+  per file (e.g. `statecheck.tool_executor`). There is no separate
   structured-output file, no built-in trace persistence beyond what a log
   handler is configured to capture, and no dashboard. `ContractViolation.to_dict()`
   exists for structured inspection but is not automatically written
@@ -366,7 +366,28 @@ a reader could find without inferring it from test code:
 ---
 
 ## Changelog
-- **v0.5.1** — Renamed the project from `invariant-gate` to `umpire`
+- **v0.5.2** — Renamed the project again, `Umpire` -> `statecheck` (package
+  `umpire/` -> `statecheck/`). Reason: `Umpire` collided on two independent
+  fronts found together -- an existing, actively maintained MIT-licensed
+  HPC memory-management library (LLNL/Umpire; unrelated domain, but same
+  name, same license type, real Slack + mailing-list community) and a
+  hard PyPI namespace collision (`pip install umpire` already installs a
+  different, unrelated published package). Conceptual fit to the
+  "independent arbiter" metaphor was not sufficient justification to keep
+  a name with a taken package namespace -- namespace availability is a
+  harder constraint than metaphor quality. "statecheck" was checked
+  against PyPI and GitHub directly before adopting, not assumed clean;
+  see `COMPARISON.md` for the resulting, incidentally sharper positioning
+  against the closest adjacent public project (tollgate) found during
+  that same check. No functional code changes; full existing suite
+  re-verified passing (52/52) after the rename.
+  **Correction to the entry below:** an earlier, purely mechanical
+  find-and-replace used for *this* rename had also overwritten "Umpire"
+  with "statecheck" inside v0.5.1's own historical text, making it read
+  as if the project renamed directly from `invariant-gate` to
+  `statecheck` and skipping the Umpire chapter entirely. Restored below
+  rather than left silently wrong.
+- **v0.5.1** — Renamed the project from `invariant-gate` to `Umpire`
   (package `invariant_gate/` -> `umpire/`). Reason: a name-collision check
   against a curated AI-security tools directory (done as part of GTM
   research before a submission) found the prior name overlapped closely
@@ -376,7 +397,7 @@ a reader could find without inferring it from test code:
   overlap was close enough (shared "Invariant" root, same technical
   niche) that a disclaimer would not have meaningfully reduced confusion.
   New name chosen and verified against the same directory plus targeted
-  searches for direct collisions before adopting -- "umpire" ties to the
+  searches for direct collisions before adopting -- "Umpire" ties to the
   gate's actual post_condition behavior (an independent party that makes
   the call based on what's observably true, not on any party's
   self-report) rather than to the pre_condition/access-control metaphor
@@ -427,7 +448,7 @@ a reader could find without inferring it from test code:
   that happened to overlap in time) — a full lock was simpler and matched
   what §7 already claimed.
 - **v0.3.2** — Dropped the "orng" project framing entirely (package
-  renamed `orng_core/` -> `umpire/`, spec file renamed
+  renamed `orng_core/` -> `statecheck/`, spec file renamed
   `ORNG_PROTOCOL.md` -> `PROTOCOL.md`). Added §8 (interface/observability/
   measured overhead) and made the per-caller-vs-per-system concurrency
   guarantee explicit in §4 and §7, correcting the record that it was a
@@ -458,11 +479,11 @@ a reader could find without inferring it from test code:
   §3), continuity node schema (former §5), and all dependent code
   (`continuity/`, `orng_core/impact.py`, `pitchdeck_composer/`,
   `orng_core/model_select.py`'s benchmarking logic, `cloud/gpu_detect.py`).
-  Direction narrowed to: does the Umpire primitive (§4)
+  Direction narrowed to: does the StateCheck primitive (§4)
   generalize. Extracted `parse_with_fallback` into its own module
   (`orng_core/tool_call_parser.py`) since it's coupled to §3 (wire format)
   independent of model selection.
 - **v0.1.0** — initial draft. Core object schemas, execution contract,
   impact scoring contract, tool-call wire format, continuity schema
-  versioning requirement, and the Umpire primitive for general
+  versioning requirement, and the StateCheck primitive for general
   tool execution (prevention, containment, scoped recovery).
