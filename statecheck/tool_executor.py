@@ -337,6 +337,11 @@ def execute_contracted(contract: ToolContract, fn: Callable[..., Any], *args, **
                 if contract.rollback is not None:
                     contract.rollback()
                     state = "rolled_back"
+                    note = (
+                        f"{contract.name} failed its post-condition ({post_name}); "
+                        f"rollback ran and undid the tool's effects, so no side "
+                        f"effects from this call remain."
+                    )
                 elif contract.taints_state_on_failure:
                     reason = contract.taint_reason or contract.name
                     violation = ContractViolation(stage="post", tool_name=contract.name,
@@ -347,8 +352,14 @@ def execute_contracted(contract: ToolContract, fn: Callable[..., Any], *args, **
                     raise violation
                 else:
                     state = "unknown"
+                    note = (
+                        f"{contract.name} failed its post-condition ({post_name}); "
+                        f"no rollback is defined and the tool does not taint state, "
+                        f"so its side effects (if any) are left untouched and their "
+                        f"status is unknown."
+                    )
                 raise ContractViolation(stage="post", tool_name=contract.name, predicate_name=post_name,
-                                         actual=output, recovery_state=state)
+                                         actual=output, recovery_state=state, note=note)
 
         return output
 

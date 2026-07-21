@@ -16,6 +16,7 @@ import pytest
 
 from statecheck.tool_executor import (
     ContractViolation, ExecutionFailure, GLOBAL_TAINT,
+    ToolContract, execute_contracted,
     file_write_tool, sqlite_exec_tool, shell_command_tool,
 )
 
@@ -291,3 +292,41 @@ def test_shell_command_execution_failure_is_distinct_from_contract_violation():
     # These must be distinguishable so a caller can react differently.
     with pytest.raises(ExecutionFailure):
         shell_command_tool(["false"])  # exits 1, always
+
+
+def test_post_condition_failure_note_explains_rolled_back_branch():
+    # Issue #4: the rolled_back branch must carry a note (like the tainted
+    # branch already does) so a caller catching the violation knows what
+    # happened to the tool's side effects.
+    contract = ToolContract(
+        name="rolled_back_note",
+        pre_condition=lambda: True,
+        post_condition=lambda result: False,  # always fails -> force rollback
+        rollback=lambda: None,
+        is_mutating=False,
+        taints_state_on_failure=False,
+    )
+    with pytest.raises(ContractViolation) as exc_info:
+        execute_contracted(contract, lambda: "out")
+    assert exc_info.value.recovery_state == "rolled_back"
+    assert exc_info.value.note, "rolled_back branch must set a non-empty note"
+    assert "rollback" in exc_info.value.note.lower()
+
+
+def test_post_condition_failure_note_explains_unknown_branch():
+    # Issue #4: the unknown branch (no rollback, no taint) is exactly when the
+    # caller most needs the note -- state is genuinely unknown, so explain it.
+    contract = ToolContract(
+        name="unknown_note",
+        pre_condition=lambda: True,
+        post_condition=lambda result: False,  # always fails, no recovery defined
+        rollback=None,
+        is_mutating=False,
+        taints_state_on_failure=False,
+    )
+    with pytest.raises(ContractViolation) as exc_info:
+        execute_contracted(contract, lambda: "out")
+    assert exc_info.value.recovery_state == "unknown"
+    assert exc_info.value.note, "unknown branch must set a non-empty note"
+    assert "unknown" in exc_info.value.note.lower()
+
